@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive product Filter</title>
+    <style>
+        body{
+            background-color: #f4f6f8;
+            padding: 20px;
+            margin:0;
+            font-family: arial,sans-serif;
+        }
+     
+        h1,h2{
+            text-align: center;
+        }
+     .controls{
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 20px;
+     }
+     select{
+        padding: 7px;
+        font-size: 15px;
+     }
+     .products{
+        display: grid;
+        /* justify-content: center; */
+        gap:15px;
+        grid-template-columns:repeat(auto-fit,minmax(200px,1fr)) ;
+     }
+     .product{
+        background:#fff ;
+        padding:20px;
+        border-radius: 8px;
+        box-shadow:0,2px,6px rgba(0,0,0,0.1) ;
+     }
+    .product h3{
+        margin: 0 0 10px;
+    }
+    @media(max-width:600px) {
+     body{
+        padding: 10px;
+     }   
+    }
+    </style>
+</head>
+<body>
+    <h1>Product Page</h1>
+    <h2>Product Filter & Sort</h2>
+    <div class="controls">
+    <select name="categoryFilter" id="categoryFilter">
+        <option value="all">All Categories</option>
+        <option value="electronics">Electronics</option>
+        <option value="clothing">Clothing</option>
+    </select>
+        <select name="sortOption" id="sortOption">
+        <option value="default">Sort By</option>
+        <option value="price">Price</option>
+        <option value="rating">Rating</option>
+    </select>
+    </div>
+    <div class="products" id="productList"></div>
+
+    <script>
+        const products=[
+            {name:'T-shirt',category:'clothing',price:25,rating:4.0},
+            {name:'Jacket',category:'clothing',price:120,rating:4.7},
+            {name:'Laptop',category:'electronics',price:800,rating:4.5},
+            {name:'Headphones',category:'electronics',price:100,rating:4.2}
+        ];
+
+        const productList=document.getElementById("productList");
+        const categoryFilter=document.getElementById("categoryFilter");
+        const sortOption=document.getElementById("sortOption");
+         
+        function displayProducts(items){
+            productList.innerHTML="";
+            items.forEach(p=> {
+                const div=document.createElement("div");
+                div.className="product";
+                div.innerHTML=`
+                <h3>${p.name}</h3>
+                <p>category:${p.category}</p>
+                <p>price:Rs${p.price}</p>
+                <p>Rating:${p.rating}</p>`
+                productList.appendChild(div);
+            });
+   }
+        
+        function updateProducts(){
+            let filtered=[...products];
+            if (categoryFilter.value!=="all"){
+                filtered=filtered.filter(p => p.category===categoryFilter.value);
+            }
+            if (sortOption.value==="price"){
+                filtered.sort((a,b)=>a.price-b.price);
+            }
+            else if(sortOption.value==="rating"){
+                filtered.sort((a,b)=>b.rating-a.rating);
+            }
+            displayProducts(filtered);
+
+        }
+        categoryFilter.addEventListener("change",updateProducts);
+        sortOption.addEventListener("change",updateProducts);
+
+        displayProducts(products);
+    </script>
+</body>
+</html>
